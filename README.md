@@ -4,8 +4,8 @@
 ## Summary
 **scCopyATAC**, a computational method to detect CNVs and delineat clonal substructure from single cell ATAC sequencing data without normal reference. scCopyATAC has two main steps: **scCopyATAC-PRE**, **scCopyATAC-CNV**. scCopyATAC-PRE preprocesses single cell ATAC sequencing data and computes the raw CNV signals matrix. And do clustering for single cell by chromotin accessibility, which is a paperation for next step detecting diploid baseline. Then scCopyATAC-CNV detect potential diploid baseline by gaussian mixture model and redefine raw CNV signals get the final CNV value. scCopyATAC using stand cellranger output as input.
 
-#### Overview of HiNT workflow: 
-<img src="https://github.com/suwangbio/HiNT/blob/master/images/HiNT_workflow.png" width="800">
+#### Overview of scCopyATAC workflow: 
+<img src="https://github.com/Taddyshina/scCopyATAC/blob/main/figures/scCopyATAC_pipeline.png" width="800">
 
 ## Installation
 
