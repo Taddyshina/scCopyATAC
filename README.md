@@ -1,9 +1,8 @@
 # scCopyATAC
-[![DOI](https://zenodo.org/badge/240967519.svg)](https://zenodo.org/badge/latestdoi/240967519)
-## A computational method for detecting copy number variations and translocations from Hi-C data
+## A computational method for delineating copy number and clonal substructure from tumor single-cell ATAC-seq data without normal reference
 
 ## Summary
-**HiNT** (**Hi**-C for copy **N**umber variation and **T**ranslocation detection), a computational method to detect CNVs and Translocations from Hi-C data. HiNT has three main components: **HiNT-PRE**, **HiNT-CNV**, and **HiNT-TL**. HiNT-PRE preprocesses Hi-C data and computes the contact matrix, which stores contact frequencies between any two genomic loci; both HiNT-CNV and HiNT-TL starts with HI-C contact matrix, predicts copy number segments, and inter-chromosomal translocations, respectively 
+**scCopyATAC**, a computational method to detect CNVs and delineat clonal substructure from single cell ATAC sequencing data without normal reference. scCopyATAC has two main steps: **scCopyATAC-PRE**, **scCopyATAC-CNV**. scCopyATAC-PRE preprocesses single cell ATAC sequencing data and computes the raw CNV signals matrix. And do clustering for single cell by chromotin accessibility, which is a paperation for next step detecting diploid baseline. Then scCopyATAC-CNV detect potential diploid baseline by gaussian mixture model and redefine raw CNV signals get the final CNV value. scCopyATAC using stand cellranger output as input.
 
 #### Overview of HiNT workflow: 
 <img src="https://github.com/suwangbio/HiNT/blob/master/images/HiNT_workflow.png" width="800">
