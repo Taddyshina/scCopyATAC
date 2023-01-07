@@ -35,76 +35,60 @@ R and R packages
 
 * Download the test datasets from [HERE]()
 
-### HiNT-PRE
-HiNT pre: Preprocessing Hi-C data. HiNT pre does alignment, contact matrix creation and normalization in one command line.
+### scCopyATAC-PRE
+scCopyATAC-PRE: Preprocesses single cell ATAC sequencing data and computes the raw CNV signals matrix. And do clustering for single cell by chromotin accessibility in one command line.
 
-```$ hint pre -d /path/to/hic_1.fastq.gz,/path/to/hic_2.fastq.gz -i /path/to/bwaIndex/hg19/hg19.fa --refdir /path/to/refData/hg19 --informat fastq --outformat cooler -g hg19 -n test -o /path/to/outputdir --pairtoolspath /path/to/pairtools --samtoolspath /path/to/samtools --coolerpath /path/to/cooler```
+```$ Rscript scCopyATAC-PRE.R 10X_h5 fragment metadata outputPrefix subBC species blacklists CGneighbors Win_size step_length```
 
-```$ hint pre -d /path/to/test.bam --refdir /path/to/refData/hg19 --informat bam --outformat juicer -g hg19 -n test -o /path/to/outputdir --pairtoolspath /path/to/pairtools --samtoolspath /path/to/samtools --juicerpath /path/to/juicer_tools.1.8.9_jcuda.0.8.jar```
+**10X_h5**              :h5 file of filtered_peak_bc_matrix, cellRanger output.
 
-use ```$ which samtools ``` ```$ which pairtools ``` ```$ which cooler ``` to get the absolute path of these tools, and ```/path/to/juicer_tools.1.8.9_jcuda.0.8.jar``` should be the path where you store this file
+**metadata_pathway**           :csv file of singlecell metadata, cellRanger output.
 
-see details and more options
+**fragment**			:fragments.tsv, cellRanger output.
 
-```$ hint pre -h ```
+**outPrefix**			:Prefix of output.It should contain directory path. (eg. /out/dir/namePrefix)
 
-### HiNT-CNV
-HiNT cnv: prediction of copy number information, as well as segmentation from Hi-C.
+**subBC**				:Barcode list file. It should be one column and no header.
 
-```$ hint cnv -m contactMatrix.cool -f cooler --refdir /path/to/refDir/hg19 -r 50 -g hg19 -n test -o /path/to/outputDir --bicseq /path/to/BICseq2-seg_v0.7.3 -e MboI```
+**species**             :Species and references version. "hg19" for hg19; "hg38" for hg38; "mm10" for mm10.
 
-```$ hint cnv -m /path/to/4DNFIS6HAUPP.mcool::/resolutions/50000 -f cooler --refdir /path/to/refDir/hg38 -r 50 -g hg38 -n HepG2 --bicseq /path/to/BICseq2-seg_v0.7.3 -e DpnII --maptrack 36mer```
+**blacklists**          :matched blacklist files of species.
 
-```$ hint cnv -m /path/to/4DNFICSTCJQZ.hic -f juicer --refdir /path/to/refDir/hg38 -r 50 -g hg38 -n HepG2 --bicseq /path/to/BICseq2-seg_v0.7.3 -e DpnII```
+**CGneighbors**         :Considered CG contents to caculate CNV.(default value is 100)
 
-```$ hint cnv -m /path/to/4DNFICSTCJQZ.hic -f juicer --refdir /path/to/refDir/hg38 -r 50 -g hg38 -n HepG2 --bicseq /path/to/BICseq2-seg_v0.7.3 -e DpnII --doiter```
+**Win_size**            :windows size to caculate CNV.(default value is 10e6)
 
-```/path/to/BICseq2-seg_v0.7.3``` should be the path where you store this package
+**step_length**         :step length of windows(default value is 2e6)
 
-see details and more options
 
-```$ hint cnv -h ```
 
-### HiNT-TL
-HiNT tl: interchromosomal translocations and breakpoints detection from
-Hi-C inter-chromosomal interaction matrices.
+### scCopyATAC-CNV
+scCopyATAC-CNV: detect potential diploid baseline by gaussian mixture model and redefine raw CNV signals get the final CNV value
 
-```$ hint tl -m /path/to/data_1Mb.cool,/path/to/data_100kb.cool --chimeric /path/to/test_chimeric.sorted.pairsam.gz --refdir /path/to/refDir/hg19 --backdir /path/to/backgroundMatrices/hg19 --ppath /path/to/pairix -f cooler -g hg19 -n test -o /path/to/outputDir```
+```$ Rscript scCopyATAC-CNV.R input sample resolution```
 
-```$ hint tl -m /path/to/4DNFIS6HAUPP.mcool::/resolutions/1000000,/path/to/4DNFIS6HAUPP.mcool::/resolutions/100000 -f cooler --refdir /path/to/refDir/hg38 --backdir /path/to/backgroundMatrices/hg38 -g hg38 -n 4DNFICSTCJQZ -c 0.05 --ppath /path/to/pairix -p 12```
+**input**              :RDS output of scCopyATAC-pre
 
-```$ hint tl -m /path/to/4DNFICSTCJQZ.hic -f juicer --refdir /path/to/refData/hg38 --backdir /path/to/backgroundMatrices/hg38 -g hg38 -n 4DNFICSTCJQZ -c 0.05 --ppath /path/to/pairix -p 12 -o HiNTtransl_juicerOUTPUT```
+**sample**           :sample type cell line or tumor.(eg. Cell_line, Tumor)
 
-use ```$ which pairix ``` to get the absolute path of pairix
+**resolution**			:Clustering resolution of subclone clustering.
 
-see details and more options
 
-```$ hint tl -h ```
+## Output of scCopyATAC
+### scCopyATAC-PRE output
+In the scCopyATAC-PRE output directory, you will find
 
-## Output of HiNT
-### HiNT-PRE output
-In the HiNT-PRE output directory, you will find
+1. ```sample_metadata_S1.txt``` cell info contains cell barcodes, cell clusters base on chromotin accessibility.
+2. ```sample_windows.txt``` windows info contains cnv windows chromosomo, start pos, end pos and CG content.
+3. ```sample_S1.rds``` files for next step scCopyATAC-CNV.
+4. ```sample_raw_CNV_heatmap.png``` heatmap of raw CNV signals.
+5. ```sample_raw_CNV.mtx``` raw CNV cellxwindows mtx.
 
-1. ```jobname.bam``` aligned lossless file in bam format
-2. ```jobname_merged_valid.pairs.gz``` reads pairs in pair format
-3. ```jobname_chimeric.sorted.pairsam.gz``` ambiguous chimeric read pairs used for breakpoint detection in [pairsam](https://github.com/mirnylab/pairtools) format
-4. ```jobname_valid.sorted.deduped.pairsam.gz``` valid read pairs used for Hi-C contact matrix creation in [pairsam](https://github.com/mirnylab/pairtools) format
-5. ```jobname.mcool``` Hi-C contact matrix in [cool](https://github.com/mirnylab/cooler) format
-6. ```jobname.hic``` Hi-C contact matrix in [hic](https://github.com/aidenlab/juicer) format
+### scCopyATAC-CNV output
+In the scCopyATAC-CNV output directory, you will find
 
-### HiNT-CNV output
-In the HiNT-CNV output directory, you will find
-
-1. ```jobname_GAMPoisson.pdf``` the GAM regression result
-2. ```segmentation/jobname_bicsq_allchroms.txt``` CNV segments with log2 copy ratio and p-values in txt file
-3. ```segmentation/jobname_resolution_CNV_segments.png``` figure to visualize CNV segments
-4. ```segmentation/jobname_bicseq_allchroms.l2r.pdf``` figure to visualize log2 copy ration in each bin (bin size = resolution you set)
-5. ```segmentation/other_files``` intermediate files used to run BIC-seq
-6. ```jonname_dataForRegression/*``` data used for regression as well as residuals after removing Hi-C biases
-
-### HiNT-TL output
-In the HiNT-TL output directory, you will find
-
-1. ```jobname_Translocation_IntegratedBP.txt``` the final integrated translocation breakpoint
-2. ```jobname_chrompairs_rankProduct.txt``` rank product predicted potential translocated chromosome pairs
-3. ```otherFolders``` intermediate files used to identify the translocation breakpoints
+1. ```sample_metadata_S2.txt``` cell info contains cell barcodes, cell clusters base on chromotin accessibility, predicated cell types and predicated subclone.
+2. ```sample_final_CNV_heatmap.png``` heatmap of final CNV signals.
+3. ```sample_final_CNV_line_profile.png``` line profile of final CNV signals.
+4. ```sample_final_subclone_tree.png``` clonal relationship of subclone
+5. ```sample_final_CNV.mtx``` final CNV cellxwindows mtx.
