@@ -19,28 +19,21 @@ R and R packages
 
 * scCopyATAC is a install free pipeline which can be dirictly used. 
   1. Install scCopyATAC dependencies
-  2. Download scCopyATAC ```git clone https://github.com/parklab/HiNT.git```
-  3. Go to HiNT directory, install it by ```$ python setup.py install ```
+  2. Download scCopyATAC ```git clone https://github.com/Taddyshina/scCopyATAC.git```
+  3. Go to scCopyATAC/scripts directory, dirictly start CNV analysis.```
   
   *** Type ```$ hint``` to test if HiNT successfully installed
 
-* Method 4: Run HiNT in a Docker container (highly recommended)
+### Download reference files used in scCopyATAC
 
-	``` $ docker pull suwangbio/hint```
-
-	``` $ docker run suwangbio/hint hint```
-
-	See details of the usage on HiNT page at [docker hub](https://hub.docker.com/r/suwangbio/hint) 
-
-### Download reference files used in HiNT [HERE](http://compbio.med.harvard.edu/hint/)
-
-1. Download HiNT references [HERE](http://compbio.med.harvard.edu/hint/refData/). Only hg19, hg38 and mm10 are available currently. Unzip it ```$ unzip hg19.zip ```
-2. Download HiNT background matrices [HERE](http://compbio.med.harvard.edu/hint/backgroundMatrices/). Only hg19, hg38 and mm10 are available currently. Unzip it ```$ unzip hg19.zip ```
-3. Download BWA index files [HERE](http://compbio.med.harvard.edu/hint/BWAIndex/). Only hg19, hg38 and mm10 are available currently. Unzip it ```$ unzip hg19.zip ```
+1. Download hg19 reference [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).  Download hg19 blacklists [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).
+2. Download hg38 reference [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg38.html).  Download hg38 blacklists [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).
+3. Download mm10 reference [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg38.html).  Download mm10 blacklists [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).
+4. Now only hg19, hg38 and mm10 available for scCopyATAC.
 
 ## Quick Start
 
-* Download the test datasets from [HERE](http://compbio.med.harvard.edu/hint/testData.zip)
+* Download the test datasets from [HERE]()
 
 ### HiNT-PRE
 HiNT pre: Preprocessing Hi-C data. HiNT pre does alignment, contact matrix creation and normalization in one command line.
