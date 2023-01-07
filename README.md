@@ -13,47 +13,13 @@
 R and R packages
 
 1. [R >= 3.4](https://www.r-project.org/)
-2. [ChIPpeakAnno](https://www.bioconductor.org/packages/release/bioc/html/ChIPpeakAnno.html), [Signac](https://cloud.r-project.org/web/packages/Signac/index.html), [Seurat](https://cloud.r-project.org/web/packages/Seurat/index.html), [GenomeInfoDb](https://bioconductor.org/packages/release/bioc/html/GenomeInfoDb.html), [patchwork](https://cran.r-project.org/web/packages/patchwork/index.html),[Matrix](https://cran.r-project.org/web/packages/Matrix/index.html),[matrixStats](https://cran.r-project.org/web/packages/matrixStats/index.html),[readr](https://cran.r-project.org/web/packages/readr/index.html),[GenomicRanges](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html),[magrittr](https://cran.r-project.org/web/packages/magrittr/index.html)
+2. [ChIPpeakAnno](https://www.bioconductor.org/packages/release/bioc/html/ChIPpeakAnno.html), [Signac](https://cloud.r-project.org/web/packages/Signac/index.html), [Seurat](https://cloud.r-project.org/web/packages/Seurat/index.html), [GenomeInfoDb](https://bioconductor.org/packages/release/bioc/html/GenomeInfoDb.html), [patchwork](https://cran.r-project.org/web/packages/patchwork/index.html), [Matrix](https://cran.r-project.org/web/packages/Matrix/index.html), [matrixStats](https://cran.r-project.org/web/packages/matrixStats/index.html), [readr](https://cran.r-project.org/web/packages/readr/index.html), [GenomicRanges](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html), [magrittr](https://cran.r-project.org/web/packages/magrittr/index.html), [edgeR](https://bioconductor.org/packages/release/bioc/html/edgeR.html).
 
-Python and Python packages
+### Install scCopyATAC
 
-1. [python >= 3.5](https://www.python.org/)
-2. [pyparix >= 0.3.0](https://github.com/4dn-dcic/pairix#pypairix), [cooler >= 0.7.4](https://github.com/mirnylab/cooler), [pairtools >= 0.2.2](https://github.com/mirnylab/pairtools), [numpy](https://www.scipy.org/install.html), [scipy](https://www.scipy.org/install.html), [pandas](https://pandas.pydata.org/), [sklearn](https://scikit-learn.org/stable/install.html), [multiprocessing](https://pypi.org/project/multiprocess/)
-
-Java and related tools (Optional: required when want to process Hi-C data with juicer tools)
-
-1. [Java (version >= 1.7)](https://www.java.com/en/download/)
-2. [Juicer tools (1.8.9 is recommended)](https://github.com/aidenlab/juicer/wiki/Download) 
-
-Perl
-
-1. [Perl (version >= 5)](https://www.perl.org/)
-
-
-Other dependencies
-
-1. [samtools](http://www.htslib.org/doc/) (1.3.1+)
-2. [BIC-seq2](http://www.math.pku.edu.cn/teachers/xirb/downloads/software/BICseq2/BICseq2/BICseq2-seg_v0.7.3.tar.gz) (0.7.3) ! This is optional: if you don't want to run HiNT-CNV, you don't need this package. [Download BICseq2, unzip it, and give the path of BICseq2-seg_v0.7.3 (/path/to/BICseq2-seg_v0.7.3)].
-3. [bwa](https://sourceforge.net/projects/bio-bwa/files/) (0.7.16+) ! This is optional: required only when your input is fastq
-4. [tabix](https://sourceforge.net/projects/samtools/files/tabix/) (0.2.6)
-
-### Install HiNT
-
-* Method1: Install using conda (highly recommended)
-
-	``` $ conda install -c su hint```
-
-	or
-
-	``` $ conda install hint```
-	
-* Method2: Install from PyPI using pip.
-
-	``` $ pip install HiNT-Packages```
-
-* Method3: Install manually 
-  1. Install HiNT dependencies
-  2. Download HiNT ```git clone https://github.com/parklab/HiNT.git```
+* scCopyATAC is a install free pipeline which can be dirictly used. 
+  1. Install scCopyATAC dependencies
+  2. Download scCopyATAC ```git clone https://github.com/parklab/HiNT.git```
   3. Go to HiNT directory, install it by ```$ python setup.py install ```
   
   *** Type ```$ hint``` to test if HiNT successfully installed
