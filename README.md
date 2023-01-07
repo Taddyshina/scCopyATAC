@@ -13,7 +13,7 @@
 R and R packages
 
 1. [R >= 3.4](https://www.r-project.org/)
-2. [mgcv](https://cran.r-project.org/web/packages/mgcv/index.html), [strucchange](https://cran.r-project.org/web/packages/strucchange/index.html), [doParallel](https://www.rdocumentation.org/packages/parallel/versions/3.4.1), [Cairo](https://cran.r-project.org/web/packages/Cairo/index.html), [foreach](https://cran.r-project.org/web/packages/optparse/index.html)
+2. [ChIPpeakAnno](https://www.bioconductor.org/packages/release/bioc/html/ChIPpeakAnno.html), [Signac](https://cloud.r-project.org/web/packages/Signac/index.html), [Seurat](https://cloud.r-project.org/web/packages/Seurat/index.html), [GenomeInfoDb](https://bioconductor.org/packages/release/bioc/html/GenomeInfoDb.html), [patchwork](https://cran.r-project.org/web/packages/patchwork/index.html),[Matrix](https://cran.r-project.org/web/packages/Matrix/index.html),[matrixStats](https://cran.r-project.org/web/packages/matrixStats/index.html),[readr](https://cran.r-project.org/web/packages/readr/index.html),[GenomicRanges](https://bioconductor.org/packages/release/bioc/html/GenomicRanges.html),[magrittr](https://cran.r-project.org/web/packages/magrittr/index.html)
 
 Python and Python packages
 
