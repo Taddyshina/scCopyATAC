@@ -20,9 +20,7 @@ R and R packages
 * scCopyATAC is a install free pipeline which can be dirictly used. 
   1. Install scCopyATAC dependencies
   2. Download scCopyATAC ```git clone https://github.com/Taddyshina/scCopyATAC.git```
-  3. Go to scCopyATAC/scripts directory, dirictly start CNV analysis.```
-  
-  *** Type ```$ hint``` to test if HiNT successfully installed
+  3. Go to scCopyATAC/scripts directory, dirictly start CNV analysis.
 
 ### Download reference files used in scCopyATAC
 
