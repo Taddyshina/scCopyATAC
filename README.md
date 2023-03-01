@@ -37,6 +37,7 @@ R and R packages
 scCopyATAC-PRE: Preprocesses single cell ATAC sequencing data and computes the raw CNV signals matrix. And do clustering for single cell by chromotin accessibility in one command line.
 
 ```$ gunzip fragments.tsv.gz```
+
 ```$ Rscript scCopyATAC-PRE.r 10X_h5 fragment metadata outputPrefix subBC species blacklists CGneighbors Win_size step_length```
 
 **10X_h5**              :h5 file of filtered_peak_bc_matrix, cellRanger output.
