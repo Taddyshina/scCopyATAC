@@ -24,9 +24,9 @@ R and R packages
 
 ### Download reference files used in scCopyATAC
 
-1. Download hg19 reference [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).  Download hg19 blacklists [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).
-2. Download hg38 reference [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg38.html).  Download hg38 blacklists [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).
-3. Download mm10 reference [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg38.html).  Download mm10 blacklists [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).
+1. Download hg19 reference [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).  Download hg19 blacklists [HERE](https://github.com/Boyle-Lab/Blacklist/blob/master/lists/hg19-blacklist.v2.bed.gz).
+2. Download hg38 reference [HERE](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg38.html).  Download hg38 blacklists [HERE](https://github.com/Boyle-Lab/Blacklist/blob/master/lists/hg38-blacklist.v2.bed.gz).
+3. Download mm10 reference [HERE](https://www.bioconductor.org/packages/release/data/annotation/html/BSgenome.Mmusculus.UCSC.mm10.html).  Download mm10 blacklists [HERE](https://github.com/Boyle-Lab/Blacklist/blob/master/lists/mm10-blacklist.v2.bed.gz).
 4. Now only hg19, hg38 and mm10 available for scCopyATAC.
 
 ## Quick Start
