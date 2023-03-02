@@ -1,117 +1,103 @@
 #Step1 cellranger output files preprocessing
 #R script
+#Step1 cellranger output files preprocessing
+#R script
 args <- commandArgs(T)
-library(ChIPpeakAnno)
-library(Signac)
-library(Seurat)
-library(GenomeInfoDb)
-library(patchwork)
-library(Matrix)
-library(SummarizedExperiment)
-library(matrixStats)
-library(readr)
-library(GenomicRanges)
-library(magrittr)
-library(edgeR)
+suppressMessages(library(ChIPpeakAnno))
+suppressMessages(library(Signac))
+suppressMessages(library(Seurat))
+suppressMessages(library(GenomeInfoDb))
+suppressMessages(library(patchwork))
+suppressMessages(library(Matrix))
+suppressMessages(library(SummarizedExperiment))
+suppressMessages(library(matrixStats))
+suppressMessages(library(readr))
+suppressMessages(library(GenomicRanges))
+suppressMessages(library(magrittr))
+suppressMessages(library(edgeR))
+suppressMessages(library(ggplot2))
+"%ni%" <- Negate("%in%")
 
-if(length(args) != 3){cat(
+if(length(args) != 10){cat(
 '
 Step1 cellranger output files preprocessing
-
 Usage: S1Preprocessing.R 10X_h5 fragment metadata outputPrefix subBC species blacklists CGneighbors Win_size step_length
-
 10X_h5              # h5 file of filtered_peak_bc_matrix, cellRanger output.
-
-metadata_pathway            # csv file of singlecell metadata, cellRanger output.
-
 fragment			# fragments.tsv, cellRanger output.
-
+metadata_pathway            # csv file of singlecell metadata, cellRanger output.
 outPrefix			# Prefix of output.It should contain directory path. (eg. /out/dir/namePrefix)
-
 subBC				# Barcode list file. It should be one column and no header.
-
 species             # Species and references version. "hg19" for hg19; "hg38" for hg38; "mm10" for mm10.
-
 blacklists          # matched blacklist files of species.
-
 CGneighbors         # Considered CG contents to caculate CNV.(default value is 100)
-
 Win_size            # windows size to caculate CNV.(default value is 10e6)
-
-step_length         # step length of windows(default value is 2e6)
-}
-
-10X_h5 <- args[1]
-fragment  <- args[2]
-metadata_pathway <- args[3]
-outrds    <- args[4]
-subBC     <- args[5]
-species   <- args[6]
-if( species == "hg19" ){
-library(BSgenome.Hsapiens.UCSC.hg19)
-genome <- BSgenome.Hsapiens.UCSC.hg19
-}else if( species == "hg38" ){
-library(BSgenome.Hsapiens.UCSC.hg38)
-genome <- BSgenome.Hsapiens.UCSC.hg38
-}else if( species == "mm10" ){
-library(BSgenome.Mmusculus.UCSC.mm10)
-genome <- BSgenome.Mmusculus.UCSC.mm10
-}else{ cat(
-'
-ERROR: Please input right species!\n
+step_length         # step length of windows(default value is 2e6)\n
 ')
 }
 
-blacklists <- args[7]
-CGneighbors <- args[8]
-Win_size <- args[9]
-step_length <- args[10]
-
+tenx  <- "filtered_peak_bc_matrix.h5"
+fragment  <- "fragments.tsv.gz"
+metadata_pathway <- "singlecell.csv"
+outrds    <- "C:/Users/Ted/Desktop/infer_scCNV_from_ATAC/A7"
+subBC     <- "barcodes.tsv"
+species   <- "hg19"
+if( species == "hg19" ){
+suppressMessages(library(BSgenome.Hsapiens.UCSC.hg19))
+genome <- BSgenome.Hsapiens.UCSC.hg19
+}else if( species == "hg38" ){
+suppressMessages(library(BSgenome.Hsapiens.UCSC.hg38))
+genome <- BSgenome.Hsapiens.UCSC.hg38
+}else if( species == "mm10" ){
+suppressMessages(library(BSgenome.Mmusculus.UCSC.mm10))
+genome <- BSgenome.Mmusculus.UCSC.mm10
+}else{ 
+cat(
+'
+ERROR: Please input right species!\n
+')
+break
+}
+blacklists <- "hg19-blacklist.v2.bed"
+CGneighbors <- "100"
+Win_size <- 10e6
+step_length <- 2e6
 
 #1,Do clustering based on peaks_cells matrix
-
-
-counts <- Read10X_h5(filename = 10X_h5)
+counts <- Read10X_h5(filename = tenx)
 metadata <- read.csv(
-  file = metadata,
+  file = paste0(as.character(metadata_pathway), collapse = ","),
   header = TRUE,
   row.names = 1
 )
-
 chrom_assay <- CreateChromatinAssay(
   counts = counts,
   sep = c(":", "-"),
   genome = species,
-  fragments = fragment,
+  fragments = paste0(as.character(fragment), collapse = ","),
   min.cells = 10,
   min.features = 200
 )
-
 seurat_obj <- CreateSeuratObject(
   counts = chrom_assay,
   assay = "peaks",
   meta.data = metadata
 )
-
 seurat_obj <- RunTFIDF(seurat_obj)
 seurat_obj <- FindTopFeatures(seurat_obj, min.cutoff = 'q0')
 seurat_obj <- RunSVD(seurat_obj)
-
 seurat_obj <- RunUMAP(object = seurat_obj, reduction = 'lsi', dims = 2:30)
 seurat_obj <- FindNeighbors(object = seurat_obj, reduction = 'lsi', dims = 2:30)
 seurat_obj <- FindClusters(object = seurat_obj, verbose = FALSE, algorithm = 3)
-DimPlot(object = seurat_obj, label = TRUE) + NoLegend()
-
+plot<-DimPlot(object = seurat_obj, label = TRUE) + NoLegend()
+ggsave("chromatin_accessibility_clusters_umap.pdf")
 seurat_clusters<-seurat_obj@meta.data$seurat_clusters
-
 cell_info<-as.matrix(seurat_clusters)
 rownames(cell_info)<-colnames(seurat_obj)
 cell_info<-cbind(cell_info,colnames(seurat_obj))
 colnames(cell_info)<-c('seurat_clusters','barcodes')
-
 print("Step1 get clusters finished.")
-print(paste(length(colnames(seurat_obj)),"cells divided into",max(seurat_clusters)+1,"clusters."))
-
+print(paste(length(colnames(seurat_obj)),"cells divided into",max(as.numeric(seurat_clusters)),"clusters."))
+cell_info<-as.data.frame(cell_info)
 #2,Get fragments files.
 #Estimating Copy Number Variation in scATAC-seq
 #05/02/19
@@ -119,26 +105,19 @@ print(paste(length(colnames(seurat_obj)),"cells divided into",max(seurat_cluster
 #Massively parallel single-cell chromatin landscapes of human immune 
 #cell development and intratumoral T cell exhaustion (2019)
 #Created by Jeffrey Granja
-
-subbc <- read.table(subBC, header=F, stringsAsFactor=F)
-frag  <- read.table(fragment, header = F)
+subbc <- read.table(paste0(as.character(subBC), collapse = ","), header=F, stringsAsFactor=F)
+frag  <- read.table(paste0(gsub(".gz","",as.character(fragment)), collapse = ","), header = F)
 logi  <- frag$V4 %in% subbc$V1
-logi  <- logi %in% cell_info$barcodes
+logi  <- frag$V4[logi] %in% cell_info$barcodes
 frag  <- frag[logi,]
 nrow(frag)
-gc()
-gr    <- toGRanges(fragment, format = "BED")
-gr    <- gr[logi,]
+gr <- toGRanges(paste0(as.character(fragment), collapse = ","), format = "BED")
+gr <- gr[logi,]
 gr$RG <- frag$V4
 rm(frag)
-gc()
-
 names(gr@elementMetadata@listData) <- c("N", "RG")
-
 print("Step2 get fragment files finished.")
-print(gr@strand@lengths)
-
-
+print(paste("Get",gr@strand@lengths,"reads."))
 #3,Caculate raw copy number variation signals.
 #Estimating Copy Number Variation in scATAC-seq
 #05/02/19
@@ -146,7 +125,6 @@ print(gr@strand@lengths)
 #Massively parallel single-cell chromatin landscapes of human immune 
 #cell development and intratumoral T cell exhaustion (2019)
 #Created by Jeffrey Granja
-
 countInsertions <- function(query, fragments, by = "RG"){
   #Count By Fragments Insertions
   inserts <- c(
@@ -176,7 +154,6 @@ countInsertions <- function(query, fragments, by = "RG"){
   out <- list(counts = sparseM, frip = frip, total = total)
   return(out)
 }
-
 makeWindows <- function(genome, blacklist, windowSize = 10e6, slidingSize = 2e6){
 	chromSizes <- GRanges(names(seqlengths(genome)), IRanges(1, seqlengths(genome)))
 	chromSizes <- GenomeInfoDb::keepStandardChromosomes(chromSizes, pruning.mode = "coarse")
@@ -210,7 +187,6 @@ makeWindows <- function(genome, blacklist, windowSize = 10e6, slidingSize = 2e6)
 	windowNuc$N <- 1 - (windowNuc$GC + windowNuc$AT)
 	windowNuc
 }
-
 scCNA <- function(windows, fragments, neighbors = 100, LFC = 1.5, FDR = 0.1, force = FALSE, remove = c("chrM","chrX","chrY")){
 	
 	#Keep only regions in filtered chromosomes
@@ -218,7 +194,6 @@ scCNA <- function(windows, fragments, neighbors = 100, LFC = 1.5, FDR = 0.1, for
 	fragments <- GenomeInfoDb::keepStandardChromosomes(fragments, pruning.mode = "coarse")
 	windows <- windows[seqnames(windows) %ni% remove]
 	fragments <- fragments[seqnames(fragments) %ni% remove]
-
 	#Count Insertions in windows
 	message("Getting Counts...")
 	counts <- countInsertions(windows, fragments, by = "RG")[[1]]
@@ -255,7 +230,6 @@ scCNA <- function(windows, fragments, neighbors = 100, LFC = 1.5, FDR = 0.1, for
 	log2FC <- matrix(nrow=nrow(countSummary), ncol=ncol(countSummary))
 	z <- matrix(nrow=nrow(countSummary), ncol=ncol(countSummary))
 	pval <- matrix(nrow=nrow(countSummary), ncol=ncol(countSummary))
-
 	for(x in seq_len(nrow(countSummary))){
 		if(x %% 100 == 0){
 			message(sprintf("%s of %s", x, nrow(countSummary)))
@@ -280,7 +254,6 @@ scCNA <- function(windows, fragments, neighbors = 100, LFC = 1.5, FDR = 0.1, for
 	padj <- apply(pval, 2, function(x) p.adjust(x, method = "fdr"))
 	CNA <- matrix(0, nrow=nrow(countSummary), ncol=ncol(countSummary))
 	CNA[which(log2FC >= LFC & padj <= FDR)] <- 1
-
 	se <- SummarizedExperiment(
 		assays = SimpleList(
 				CNA = CNA,
@@ -295,22 +268,16 @@ scCNA <- function(windows, fragments, neighbors = 100, LFC = 1.5, FDR = 0.1, for
 		rowRanges = windowSummary
 	)
 	colnames(se) <- colnames(counts)
-
 	return(se)
 }
-
 #----------------------------
 # Get Inputs
 #----------------------------
 blacklist <- import.bed(blacklists)
 windows <- makeWindows(genome = genome, blacklist = blacklist, windowSize = Win_size, slidingSize = step_length)
-cnaObj <- scCNA(windows, gr, neighbors = CGneighbors, LFC = 1.5, FDR = 0.1, force = TRUE, remove = c("chrM","chrX","chrY"))
-rm(windows)
-gc()
-
-cnaObj$cell_info<-cell_info                     
-saveRDS(cnaObj, outrds)
+cnaObj <- scCNA(windows, gr, neighbors = 100, LFC = 1.5, FDR = 0.1, force = TRUE, remove = c("chrM","chrX","chrY"))             
+saveRDS(cnaObj, paste(outrds,"/pre_CNV.rds",sep=''))
+saveRDS(cell_info, paste(outrds,"/cell_info.rds",sep=''))
 print("Step3 Caculate raw copy number variation signals finished.")
-
-
+		      
 # END
