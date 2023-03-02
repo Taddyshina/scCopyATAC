@@ -67,7 +67,7 @@ scCopyATAC-CNV: detect potential diploid baseline by gaussian mixture model and 
 
 ```$ Rscript scCopyATAC-CNV.r input sample resolution```
 
-**input**              :RDS output of scCopyATAC-pre
+**input**              :RDS output directory of scCopyATAC-pre
 
 **sample**           :sample type cell line or tumor.(eg. Cell_line, Tumor)
 
