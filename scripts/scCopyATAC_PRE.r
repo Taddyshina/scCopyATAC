@@ -1,7 +1,5 @@
 #Step1 cellranger output files preprocessing
 #R script
-#Step1 cellranger output files preprocessing
-#R script
 args <- commandArgs(T)
 suppressMessages(library(ChIPpeakAnno))
 suppressMessages(library(Signac))
@@ -35,12 +33,12 @@ step_length         # step length of windows(default value is 2e6)\n
 ')
 }
 
-tenx  <- "filtered_peak_bc_matrix.h5"
-fragment  <- "fragments.tsv.gz"
-metadata_pathway <- "singlecell.csv"
-outrds    <- "C:/Users/Ted/Desktop/infer_scCNV_from_ATAC/A7"
-subBC     <- "barcodes.tsv"
-species   <- "hg19"
+tenx  <- args[1]
+fragment  <- args[2]
+metadata_pathway <- args[3]
+outrds    <- args[4]
+subBC     <- args[5]
+species   <- args[6]
 if( species == "hg19" ){
 suppressMessages(library(BSgenome.Hsapiens.UCSC.hg19))
 genome <- BSgenome.Hsapiens.UCSC.hg19
@@ -57,10 +55,10 @@ ERROR: Please input right species!\n
 ')
 break
 }
-blacklists <- "hg19-blacklist.v2.bed"
-CGneighbors <- "100"
-Win_size <- 10e6
-step_length <- 2e6
+blacklists <- args[7]
+CGneighbors <- args[8]
+Win_size <- args[9]
+step_length <- args[10]
 
 #1,Do clustering based on peaks_cells matrix
 counts <- Read10X_h5(filename = tenx)
@@ -279,5 +277,4 @@ cnaObj <- scCNA(windows, gr, neighbors = 100, LFC = 1.5, FDR = 0.1, force = TRUE
 saveRDS(cnaObj, paste(outrds,"/pre_CNV.rds",sep=''))
 saveRDS(cell_info, paste(outrds,"/cell_info.rds",sep=''))
 print("Step3 Caculate raw copy number variation signals finished.")
-		      
 # END
