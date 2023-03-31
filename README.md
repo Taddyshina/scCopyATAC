@@ -1,6 +1,8 @@
 # scCopyATAC
 ## A computational method for delineating copy number and clonal substructure from tumor single-cell ATAC-seq data without normal reference
 
+## license GPL
+
 ## Summary
 **scCopyATAC**, a computational method to detect CNVs and delineat clonal substructure from single cell ATAC sequencing data without normal reference. scCopyATAC has two main steps: **scCopyATAC-PRE**, **scCopyATAC-CNV**. scCopyATAC-PRE preprocesses single cell ATAC sequencing data and computes the raw CNV signals matrix. And do clustering for single cell by chromotin accessibility, which is a paperation for next step detecting diploid baseline. Then scCopyATAC-CNV detect potential diploid baseline by gaussian mixture model and redefine raw CNV signals get the final CNV value. scCopyATAC using stand cellranger output as input.
 
